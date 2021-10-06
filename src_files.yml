@@ -1,0 +1,13 @@
+viterbi:
+  incdirs:
+  - ../register_interface/include
+  - ../register_interface/vendor/lowrisc_opentitan
+  - ../common_cells/include
+  files:
+  - gen_sv/viterbi_reg_pkg.sv
+  - gen_sv/viterbi_reg_top.sv
+  - viterbi_pkg.sv
+  - viterbi.sv
+  - viterbi_top.sv
+  vlog_opts:
+  - -L register_interface_lib

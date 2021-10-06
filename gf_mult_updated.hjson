@@ -1,0 +1,89 @@
+// Copyright lowRISC contributors.
+// Licensed under the Apache License, Version 2.0, see LICENSE for details.
+// SPDX-License-Identifier: Apache-2.0
+
+// viterbi reg 
+
+{
+    name: "viterbi",
+    clock_primary: "clk_i",
+    reset_primary: "rst_ni",
+    bus_interfaces:[ 
+        {
+             protocol: "reg_iface",
+             direction: "device"
+         }
+      ],
+
+    regwidth: "32",
+    registers: [
+        {
+            name: "dataX",
+            desc: "DataX Input",
+            swaccess: "wo",
+            fields: [
+                { bits: "7:0", name: "dataX", desc: "input parameter dataX"
+                }
+            ],
+         
+        },
+        { 
+            name: "dataY",
+            desc: "DataY Input.",
+            swaccess: "wo",
+            fields: [
+                { bits: "7:0", name: "dataY", desc: "input parameter dataY"
+                }
+            ],
+
+        },
+        { 
+            name: "state",
+            desc: "state input",
+            swaccess: "wo",
+            fields: [
+                { bits: "7:0", name: "state", desc: "input parameter state"
+                }
+            ],
+
+        },
+
+        { 
+            name: "bitout",
+            desc: "results",
+            swaccess: "ro",
+            hwaccess: "hwo",
+            hwext: "true",
+            fields: [
+                { bits: "7:0", name: "bitout", desc: "output"
+                }
+            ],
+        },
+        { name: "CTRL1",
+          desc: "Controls trigger signal of the gf arithmetic.",
+          swaccess: "wo",
+          hwaccess: "hro",
+          hwext: "true",
+          hwqe : "true",
+          fields: [
+              { bits: "0", name: "TRIGGER", desc: "Trigger operation on rising edge."
+              }
+             
+          ]
+        },
+        { name: "STATUS",
+          desc: "Contains the current status of the accelerator.",
+          swaccess: "ro",
+          hwaccess: "hwo",
+          hwext: "true",
+          fields: [ 
+              { bits: "0:0", name: "Status", desc: " Select the operation.",
+         	enum: [
+              		{ value: "0", name: "IDLE",    desc: "IDLE Status."},
+              		{ value: "1", name: "PENDING", desc: "Pending Stauts." },
+            	]
+              }
+          ]
+       },
+    ],
+}
