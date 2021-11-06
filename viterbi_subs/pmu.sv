@@ -14,7 +14,7 @@ module  pmu
 
     input logic 	         valid_i,  // trigger
 
-    output logic [1:0]           valid_o,  
+    output logic             valid_o,  
     output logic 	         data_out // 2 bmu needed for both states
 
                             
