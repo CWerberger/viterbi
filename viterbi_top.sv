@@ -79,7 +79,7 @@ module viterbi_top
 	viterbi i_viterbi (
 			   .clk_i,
 			   .rst_ni,
-			   .flush(reg_file_to_ip.flush.q & reg_file_to_ip.flush.qe)
+			   .flush(reg_file_to_ip.flush.q & reg_file_to_ip.flush.qe),
 			   .dataX(reg_file_to_ip.datax.q),
 			   .dataY(reg_file_to_ip.datay.q),
 			   .valid_i(reg_file_to_ip.ctrl1.q & reg_file_to_ip.ctrl1.qe),
