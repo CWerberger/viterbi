@@ -76,7 +76,7 @@ module viterbi_top
 			.hw2reg(ip_to_reg_file)
 	);
 	// Wrapper for the IP -> use regfile for connection -> gf_mult_hjson
-	viterbi i_viterbi (
+	viterbi_decoder i_viterbi (
 			   .clk_i,
 			   .rst_ni,
 			   .flush(reg_file_to_ip.flush.q & reg_file_to_ip.flush.qe),
