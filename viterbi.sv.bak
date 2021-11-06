@@ -13,7 +13,7 @@ import viterbi_pkg::*; // wildcard import
     input logic                  valid_i,  // trigger
 
     output logic                 valid_o,
-    output logic                 data_out  
+    output logic                 data_o  
                             
     );
 

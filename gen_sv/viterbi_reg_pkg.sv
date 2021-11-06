@@ -22,67 +22,69 @@ package viterbi_reg_pkg;
   } viterbi_reg2hw_datay_reg_t;
 
   typedef struct packed {
-    logic [7:0]  q;
-  } viterbi_reg2hw_state_reg_t;
-
-  typedef struct packed {
     logic        q;
     logic        qe;
   } viterbi_reg2hw_ctrl1_reg_t;
 
   typedef struct packed {
-    logic [7:0]  d;
+    logic        q;
+    logic        qe;
+  } viterbi_reg2hw_flush_reg_t;
+
+  typedef struct packed {
+    logic        d;
   } viterbi_hw2reg_bitout_reg_t;
 
   typedef struct packed {
     logic        d;
-  } viterbi_hw2reg_status_reg_t;
+  } viterbi_hw2reg_valid_output_reg_t;
 
   // Register -> HW type
   typedef struct packed {
-    viterbi_reg2hw_datax_reg_t datax; // [25:18]
-    viterbi_reg2hw_datay_reg_t datay; // [17:10]
-    viterbi_reg2hw_state_reg_t state; // [9:2]
-    viterbi_reg2hw_ctrl1_reg_t ctrl1; // [1:0]
+    viterbi_reg2hw_datax_reg_t datax; // [19:12]
+    viterbi_reg2hw_datay_reg_t datay; // [11:4]
+    viterbi_reg2hw_ctrl1_reg_t ctrl1; // [3:2]
+    viterbi_reg2hw_flush_reg_t flush; // [1:0]
   } viterbi_reg2hw_t;
 
   // HW -> register type
   typedef struct packed {
-    viterbi_hw2reg_bitout_reg_t bitout; // [8:1]
-    viterbi_hw2reg_status_reg_t status; // [0:0]
+    viterbi_hw2reg_bitout_reg_t bitout; // [1:1]
+    viterbi_hw2reg_valid_output_reg_t valid_output; // [0:0]
   } viterbi_hw2reg_t;
 
   // Register offsets
   parameter logic [BlockAw-1:0] VITERBI_DATAX_OFFSET = 5'h 0;
   parameter logic [BlockAw-1:0] VITERBI_DATAY_OFFSET = 5'h 4;
-  parameter logic [BlockAw-1:0] VITERBI_STATE_OFFSET = 5'h 8;
-  parameter logic [BlockAw-1:0] VITERBI_BITOUT_OFFSET = 5'h c;
-  parameter logic [BlockAw-1:0] VITERBI_CTRL1_OFFSET = 5'h 10;
-  parameter logic [BlockAw-1:0] VITERBI_STATUS_OFFSET = 5'h 14;
+  parameter logic [BlockAw-1:0] VITERBI_BITOUT_OFFSET = 5'h 8;
+  parameter logic [BlockAw-1:0] VITERBI_CTRL1_OFFSET = 5'h c;
+  parameter logic [BlockAw-1:0] VITERBI_FLUSH_OFFSET = 5'h 10;
+  parameter logic [BlockAw-1:0] VITERBI_VALID_OUTPUT_OFFSET = 5'h 14;
 
   // Reset values for hwext registers and their fields
-  parameter logic [7:0] VITERBI_BITOUT_RESVAL = 8'h 0;
+  parameter logic [0:0] VITERBI_BITOUT_RESVAL = 1'h 0;
   parameter logic [0:0] VITERBI_CTRL1_RESVAL = 1'h 0;
-  parameter logic [0:0] VITERBI_STATUS_RESVAL = 1'h 0;
+  parameter logic [0:0] VITERBI_FLUSH_RESVAL = 1'h 0;
+  parameter logic [0:0] VITERBI_VALID_OUTPUT_RESVAL = 1'h 0;
 
   // Register index
   typedef enum int {
     VITERBI_DATAX,
     VITERBI_DATAY,
-    VITERBI_STATE,
     VITERBI_BITOUT,
     VITERBI_CTRL1,
-    VITERBI_STATUS
+    VITERBI_FLUSH,
+    VITERBI_VALID_OUTPUT
   } viterbi_id_e;
 
   // Register width information to check illegal writes
   parameter logic [3:0] VITERBI_PERMIT [6] = '{
     4'b 0001, // index[0] VITERBI_DATAX
     4'b 0001, // index[1] VITERBI_DATAY
-    4'b 0001, // index[2] VITERBI_STATE
-    4'b 0001, // index[3] VITERBI_BITOUT
-    4'b 0001, // index[4] VITERBI_CTRL1
-    4'b 0001  // index[5] VITERBI_STATUS
+    4'b 0001, // index[2] VITERBI_BITOUT
+    4'b 0001, // index[3] VITERBI_CTRL1
+    4'b 0001, // index[4] VITERBI_FLUSH
+    4'b 0001  // index[5] VITERBI_VALID_OUTPUT
   };
 
 endpackage

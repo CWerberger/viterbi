@@ -72,14 +72,14 @@ module viterbi_reg_top #(
   logic datax_we;
   logic [7:0] datay_wd;
   logic datay_we;
-  logic [7:0] state_wd;
-  logic state_we;
-  logic [7:0] bitout_qs;
+  logic bitout_qs;
   logic bitout_re;
   logic ctrl1_wd;
   logic ctrl1_we;
-  logic status_qs;
-  logic status_re;
+  logic flush_wd;
+  logic flush_we;
+  logic valid_output_qs;
+  logic valid_output_re;
 
   // Register instances
   // R[datax]: V(False)
@@ -134,36 +134,10 @@ module viterbi_reg_top #(
   );
 
 
-  // R[state]: V(False)
-
-  prim_subreg #(
-    .DW      (8),
-    .SWACCESS("WO"),
-    .RESVAL  (8'h0)
-  ) u_state (
-    .clk_i   (clk_i    ),
-    .rst_ni  (rst_ni  ),
-
-    // from register interface
-    .we     (state_we),
-    .wd     (state_wd),
-
-    // from internal hardware
-    .de     (1'b0),
-    .d      ('0  ),
-
-    // to internal hardware
-    .qe     (),
-    .q      (reg2hw.state.q ),
-
-    .qs     ()
-  );
-
-
   // R[bitout]: V(True)
 
   prim_subreg_ext #(
-    .DW    (8)
+    .DW    (1)
   ) u_bitout (
     .re     (bitout_re),
     .we     (1'b0),
@@ -192,19 +166,35 @@ module viterbi_reg_top #(
   );
 
 
-  // R[status]: V(True)
+  // R[flush]: V(True)
 
   prim_subreg_ext #(
     .DW    (1)
-  ) u_status (
-    .re     (status_re),
+  ) u_flush (
+    .re     (1'b0),
+    .we     (flush_we),
+    .wd     (flush_wd),
+    .d      ('0),
+    .qre    (),
+    .qe     (reg2hw.flush.qe),
+    .q      (reg2hw.flush.q ),
+    .qs     ()
+  );
+
+
+  // R[valid_output]: V(True)
+
+  prim_subreg_ext #(
+    .DW    (1)
+  ) u_valid_output (
+    .re     (valid_output_re),
     .we     (1'b0),
     .wd     ('0),
-    .d      (hw2reg.status.d),
+    .d      (hw2reg.valid_output.d),
     .qre    (),
     .qe     (),
     .q      (),
-    .qs     (status_qs)
+    .qs     (valid_output_qs)
   );
 
 
@@ -215,10 +205,10 @@ module viterbi_reg_top #(
     addr_hit = '0;
     addr_hit[0] = (reg_addr == VITERBI_DATAX_OFFSET);
     addr_hit[1] = (reg_addr == VITERBI_DATAY_OFFSET);
-    addr_hit[2] = (reg_addr == VITERBI_STATE_OFFSET);
-    addr_hit[3] = (reg_addr == VITERBI_BITOUT_OFFSET);
-    addr_hit[4] = (reg_addr == VITERBI_CTRL1_OFFSET);
-    addr_hit[5] = (reg_addr == VITERBI_STATUS_OFFSET);
+    addr_hit[2] = (reg_addr == VITERBI_BITOUT_OFFSET);
+    addr_hit[3] = (reg_addr == VITERBI_CTRL1_OFFSET);
+    addr_hit[4] = (reg_addr == VITERBI_FLUSH_OFFSET);
+    addr_hit[5] = (reg_addr == VITERBI_VALID_OUTPUT_OFFSET);
   end
 
   assign addrmiss = (reg_re || reg_we) ? ~|addr_hit : 1'b0 ;
@@ -240,15 +230,15 @@ module viterbi_reg_top #(
   assign datay_we = addr_hit[1] & reg_we & !reg_error;
   assign datay_wd = reg_wdata[7:0];
 
-  assign state_we = addr_hit[2] & reg_we & !reg_error;
-  assign state_wd = reg_wdata[7:0];
+  assign bitout_re = addr_hit[2] & reg_re & !reg_error;
 
-  assign bitout_re = addr_hit[3] & reg_re & !reg_error;
-
-  assign ctrl1_we = addr_hit[4] & reg_we & !reg_error;
+  assign ctrl1_we = addr_hit[3] & reg_we & !reg_error;
   assign ctrl1_wd = reg_wdata[0];
 
-  assign status_re = addr_hit[5] & reg_re & !reg_error;
+  assign flush_we = addr_hit[4] & reg_we & !reg_error;
+  assign flush_wd = reg_wdata[0];
+
+  assign valid_output_re = addr_hit[5] & reg_re & !reg_error;
 
   // Read data return
   always_comb begin
@@ -263,11 +253,11 @@ module viterbi_reg_top #(
       end
 
       addr_hit[2]: begin
-        reg_rdata_next[7:0] = '0;
+        reg_rdata_next[0] = bitout_qs;
       end
 
       addr_hit[3]: begin
-        reg_rdata_next[7:0] = bitout_qs;
+        reg_rdata_next[0] = '0;
       end
 
       addr_hit[4]: begin
@@ -275,7 +265,7 @@ module viterbi_reg_top #(
       end
 
       addr_hit[5]: begin
-        reg_rdata_next[0] = status_qs;
+        reg_rdata_next[0] = valid_output_qs;
       end
 
       default: begin

@@ -18,7 +18,7 @@ module viterbi_top
 	
 	import viterbi_reg_pkg::viterbi_reg2hw_t;
 	import viterbi_reg_pkg::viterbi_hw2reg_t;
-	import wide_alu_pkg::status_e;
+	import viterbi_top_pkg::status_e;
 	
 	//Wiring Signals
 	REG_BUS #(.ADDR_WIDTH(32), .DATA_WIIDTH(32)) axi_to_regfile();  // Generic Reg-Interface Bus
@@ -79,12 +79,13 @@ module viterbi_top
 	viterbi i_viterbi (
 			   .clk_i,
 			   .rst_ni,
-			   .trigger_i(reg_file_to_ip.ctrl1.q & reg_file_to_ip.ctrl1.qe),
-			   .datax(reg_file_to_ip.datax.q),
-			   .datay(reg_file_to_ip.datay.q),
-			   .state(reg_file_to_ip.state.q),
-			   .bitout(ip_to_reg_file.bitout.d),
-			   .status_o(ip_to_reg_file.status.d)
+			   .flush(reg_file_to_ip.flush.q & reg_file_to_ip.flush.qe)
+			   .dataX(reg_file_to_ip.datax.q),
+			   .dataY(reg_file_to_ip.datay.q),
+			   .valid_i(reg_file_to_ip.ctrl1.q & reg_file_to_ip.ctrl1.qe),
+			   .valid_o(ip_to_reg_file.valid_output.d),
+			   .data_out(ip_to_reg_file.bitout.d)
+			   
 			   );
 endmodule : viterbi_top
 			
