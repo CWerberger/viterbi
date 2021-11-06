@@ -21,7 +21,7 @@ module viterbi_top
 	import viterbi_top_pkg::status_e;
 	
 	//Wiring Signals
-	REG_BUS #(.ADDR_WIDTH(32), .DATA_WIIDTH(32)) axi_to_regfile();  // Generic Reg-Interface Bus
+	REG_BUS #(.ADDR_WIDTH(32), .DATA_WIDTH(32)) axi_to_reg_file();  // Generic Reg-Interface Bus
 	viterbi_reg2hw_t reg_file_to_ip;
 	viterbi_hw2reg_t ip_to_reg_file;
 	
