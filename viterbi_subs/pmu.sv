@@ -268,4 +268,4 @@ module  pmu
     
 
     
-endmodule: pmu
+endmodule

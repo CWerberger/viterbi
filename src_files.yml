@@ -6,9 +6,10 @@ viterbi:
   files:
   - gen_sv/viterbi_reg_pkg.sv
   - gen_sv/viterbi_reg_top.sv
+  - viterbi_subs/viterbi_pkg.sv
+  - viterbi_top_pkg.sv
   - viterbi_subs/bmu.sv
   - viterbi_subs/pmu.sv
-  - viterbi_subs/viterbi_pkg.sv
   - viterbi.sv
   - viterbi_top.sv
   vlog_opts:
