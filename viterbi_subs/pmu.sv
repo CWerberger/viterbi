@@ -85,9 +85,9 @@ module  pmu
     for (genvar state = 0; state<STATES_N/2; state++) begin
             
        assign pmCand00[state] = pm_ff[2*state] 	- pm_min_ff +bm0[2*state];
-       assign pmCand01[state] = pm_ff[2*state+1] 	- pm_min_ff +bm0[2*state+1];
+       assign pmCand01[state] = pm_ff[2*state+1] - pm_min_ff +bm0[2*state+1];
        assign pmCand10[state] = pm_ff[2*state] 	- pm_min_ff +bm1[2*state];
-       assign pmCand11[state] = pm_ff[2*state+1] 	- pm_min_ff +bm1[2*state+1];
+       assign pmCand11[state] = pm_ff[2*state+1] - pm_min_ff +bm1[2*state+1];
     
     end
 
@@ -147,7 +147,7 @@ module  pmu
         end
         end
         if (valid_i) begin 
-        for (int state = 0; state<STATES_N-1; state++) begin
+        for (int state = 0; state<=STATES_N-1; state++) begin
           
             if(state==0)begin
                 if (pm_temp_wire[state]< 2048) begin
